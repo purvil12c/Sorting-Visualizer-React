@@ -1,4 +1,4 @@
-export function bubbleSort(items, setItems){
+export function bubbleSort(items){
     let resultItems = JSON.parse(JSON.stringify(items));
 
     let isSorted = false;
@@ -16,9 +16,23 @@ export function bubbleSort(items, setItems){
     return resultItems;
 }
 
+export function insertionSort(items){
+    let resultItems = JSON.parse(JSON.stringify(items));
+    for(let i = 1; i<resultItems.length;i++){
+        let j = i;
+        while(j>0 && resultItems[j]<resultItems[j-1]){
+            [resultItems[j], resultItems[j-1]] = [resultItems[j-1], resultItems[j]]
+            j-=1
+            return resultItems
+        }
+    }
+    return resultItems;
+}
+
 export function getAlgoFunction(algoFunction){
-    if(algoFunction="bubbleSort"){
+    if(algoFunction==="BubbleSort"){
         return bubbleSort;
     }
-    return bubbleSort;
+    if(algoFunction==="InsertionSort")
+    return insertionSort;
 }

@@ -15,19 +15,19 @@ const liStyle = {
     alignItems: 'center'
 }
 
-export default function Items({items, isSorted, setIsSorted, setItems, algoFunction}){
+export default function Items({items, isSorted, setIsSorted, setItems, algoFunction, process}){
     const liHeight = Math.floor((window.innerHeight/2) / items.length);
     const liWidthUnit = Math.floor((window.innerWidth/2) / 100);
     
     useEffect(() => {
-        if(isSorted === false){
+        if(isSorted === false && process==true){
             const intervalId = setInterval(
                 () => doNextRun(algoFunction), 
                 1000);
 
             return () => clearInterval(intervalId);
         }
-    }, [items, algoFunction, isSorted])
+    }, [items, algoFunction, isSorted, process])
 
     function doNextRun(algoFunction){
         const result = getAlgoFunction(algoFunction)(items);

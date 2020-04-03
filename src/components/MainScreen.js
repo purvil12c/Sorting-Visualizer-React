@@ -4,6 +4,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { Slider } from '@material-ui/core';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import Button from '@material-ui/core/Button';
 import Items from './Items';
 import { generateRandomArray, springAnim, generateRandomColor } from '../utils/Utils';
 import { bubbleSort } from '../utils/SortingAlgorithms';
@@ -14,9 +20,24 @@ export default function MainScreen() {
 
     const [numItems, setNumItems] = useState(2);
     const [isSorted, setIsSorted] = useState(false);
-    const [algoFunction, setAlgoFunction] = useState("bubbleSort");
-
+    const [algoFunction, setAlgoFunction] = useState("BubbleSort");
+    // State to start the sort process
+    const [process, setProcess] = useState(false);
     const [items, setItems] = useState(generateRandomArray(numItems));
+
+    function reset(){
+        setProcess(false);
+        setAlgoFunction("BubbleSort");
+        setIsSorted(false);
+        setNumItems(2);
+    }
+
+    function reset(num){
+        setProcess(false);
+        setAlgoFunction("BubbleSort");
+        setIsSorted(false);
+        setNewItems(num);
+    }
 
     function setNewItems(num){
         if(num===numItems){
@@ -40,7 +61,7 @@ export default function MainScreen() {
                 <Grid item xs={12}>
                     <Slider
                         value={typeof numItems === 'number' ? numItems : 0}
-                        onChange={(e, newValue)=>setNewItems(newValue)}
+                        onChange={(e, newValue)=>reset(newValue)}
                         aria-labelledby="input-slider"
                         valueLabelDisplay="auto"
                         max={10}
@@ -51,15 +72,35 @@ export default function MainScreen() {
                     <Typography component="h4" variant="h4">Number of items: {numItems}</Typography>
                 </Grid>
 
+                <Grid item xs={12}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Sorting Algorithm</FormLabel>
+                        <RadioGroup row aria-label="algorithm" name="algorithm" value={algoFunction} onChange={(e) => setAlgoFunction(e.target.value)}>
+                            <FormControlLabel value="BubbleSort" control={<Radio />} label="BubbleSort" />
+                            <FormControlLabel value="InsertionSort" control={<Radio />} label="InsertionSort" />
+                            <FormControlLabel value="SelectionSort" control={<Radio />} label="SelectionSort" />
+                            <FormControlLabel value="MergeSort" disabled control={<Radio />} label="MergeSort" />
+                            <FormControlLabel value="QuickSort" disabled control={<Radio />} label="QuickSort" />
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Button disabled={process} variant="contained" color="disabled" onClick={()=>setProcess(true)}>
+                        Launch Sort! 🚀
+                    </Button>
+                </Grid>
+
                 <Grid alignContent='center' alignItems='center' item xs={12}>
-                    <Items isSorted={isSorted} 
+                    <Items 
+                    isSorted={isSorted} 
                     algoFunction={algoFunction} 
                     items={items} 
                     setItems={setItems} 
-                    setIsSorted={setIsSorted}/>
+                    setIsSorted={setIsSorted}
+                    process={process}
+                    />
                 </Grid>
-
-                <button onClick={()=>setAlgoFunction("bubbleSort")}>BubbleSort</button>
             </Grid>
         </Container>
         </React.Fragment>
