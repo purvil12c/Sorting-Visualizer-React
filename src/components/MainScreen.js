@@ -9,7 +9,7 @@ import Items from './Items';
 import 'typeface-roboto';
 
 export default function MainScreen() {
-    const [numItems, setNumItems] = useState(50);
+    const [numItems, setNumItems] = useState(2);
     const [isSorted, setIsSorted] = useState(false);
 
     return (
@@ -27,6 +27,7 @@ export default function MainScreen() {
                         onChange={(e, newValue)=>setNumItems(newValue)}
                         aria-labelledby="input-slider"
                         valueLabelDisplay="auto"
+                        max={10}
                     />
                 </Grid>
 
