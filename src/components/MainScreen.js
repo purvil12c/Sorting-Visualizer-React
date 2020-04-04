@@ -107,7 +107,7 @@ export default function MainScreen() {
                             <FormControlLabel value="BubbleSort" control={<Radio />} label="BubbleSort" />
                             <FormControlLabel value="InsertionSort" control={<Radio />} label="InsertionSort" />
                             <FormControlLabel value="SelectionSort" control={<Radio />} label="SelectionSort" />
-                            <FormControlLabel value="MergeSort" control={<Radio />} label="MergeSort" />
+                            <FormControlLabel disabled value="MergeSort" control={<Radio />} label="MergeSort" />
                             <FormControlLabel value="QuickSort" control={<Radio />} label="QuickSort" />
                         </RadioGroup>
                     </FormControl>
