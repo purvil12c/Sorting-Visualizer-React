@@ -113,8 +113,8 @@ export default function MainScreen() {
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <Button disabled={process} variant="contained" color="disabled" onClick={()=>runAlgorithm()}>
+                <Grid item xs={12} style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <Button disabled={process} variant="contained" color="primary" onClick={()=>runAlgorithm()}>
                         Launch Sort! 🚀
                     </Button>
                     
@@ -129,7 +129,7 @@ export default function MainScreen() {
                         onChange = {changeSpeed}
                     />
 
-                    <Button style={{float: 'right'}} disabled={process} variant="contained" color="disabled" onClick={()=>toggleLayout()}>
+                    <Button style={{float: 'right'}} disabled={process} variant="contained" color="secondary" onClick={()=>toggleLayout()}>
                         Toggle Layout: {layout.toUpperCase()}
                     </Button>
                 </Grid>
