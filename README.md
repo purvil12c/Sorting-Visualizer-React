@@ -2,4 +2,4 @@
 
 React based web app to visualize different sorting algorithms
 
-![](sorting_visualizer.gif)
+![](sorting_visualizer_demo.gif)
