@@ -10,6 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import Items from './Items';
 import { generateRandomArray } from '../utils/Utils';
 import { getAlgoFunction } from '../utils/SortingAlgorithms';
@@ -18,6 +19,7 @@ import 'typeface-roboto';
 
 export default function MainScreen() {
     const [layout, setLayout] = useState("horizontal");
+    const [speed, setSpeed] = useState(1000);
     const [numItems, setNumItems] = useState(2);
     const [isSorted, setIsSorted] = useState(false);
     const [algoFunction, setAlgoFunction] = useState("BubbleSort");
@@ -26,6 +28,16 @@ export default function MainScreen() {
     const [items, setItems] = useState(generateRandomArray(numItems));
 
     const maxItems = layout==='horizontal'?10:30;
+
+    function changeSpeed(e){
+        const newSpeed = e.target.value;
+        if(newSpeed<0 || newSpeed>1000){
+            alert('Speed should be between 0 and 1000 ms');
+        }
+        else{
+            setSpeed(newSpeed);
+        }
+    }
 
     function toggleLayout(){
         if(layout === "vertical")
@@ -61,7 +73,7 @@ export default function MainScreen() {
     function runAlgorithm(){
         const result = getAlgoFunction(algoFunction)(items);
         for(let i = 0; i<result.length;i++){
-            setTimeout(()=>setItems(result[i]),i*1000);
+            setTimeout(()=>setItems(result[i]),i*speed);
         }
     }
 
@@ -105,6 +117,18 @@ export default function MainScreen() {
                     <Button disabled={process} variant="contained" color="disabled" onClick={()=>runAlgorithm()}>
                         Launch Sort! 🚀
                     </Button>
+                    
+                    <TextField
+                        id="standard-number"
+                        label="Speed (ms)"
+                        type="number"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={speed}
+                        onChange = {changeSpeed}
+                    />
+
                     <Button style={{float: 'right'}} disabled={process} variant="contained" color="disabled" onClick={()=>toggleLayout()}>
                         Toggle Layout: {layout.toUpperCase()}
                     </Button>
