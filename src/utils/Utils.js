@@ -1,3 +1,5 @@
+import {uid} from 'react-uid';
+
 const initialColors = ["#FF008C", "#D309E1", "#9C1AFF", "#7700FF", 
 "#eb4559", "#f78259", "#aeefec", "#f2ed6f", "#f3c623", "#10375c", "#116979"];
 
@@ -7,7 +9,7 @@ export function generateRandomArray(length){
     while(length-->0){
         const randomNumber = Math.floor(Math.random() * 101);
         if(randomItems.indexOf(randomNumber)===-1)
-            randomItems.push({ itemValue: randomNumber, color: generateRandomColor()})
+            randomItems.push({ id: uid(Math.random()), itemValue: randomNumber, color: generateRandomColor()})
     }
     return randomItems;
 }
