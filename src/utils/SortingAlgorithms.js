@@ -148,9 +148,9 @@ export function getAlgoFunction(algoFunction){
     if(algoFunction==="SelectionSort")
         return selectionSort;
 
-    if(algoFunction=="MergeSort")
+    if(algoFunction==="MergeSort")
         return mergeSort;
 
-    if(algoFunction=="QuickSort")
+    if(algoFunction==="QuickSort")
         return quickSort;
 }
