@@ -12,10 +12,11 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Items from './Items';
-import { generateRandomArray } from '../utils/Utils';
+import {generateRandomArray, generateRandomColor} from '../utils/Utils';
 import { getAlgoFunction } from '../utils/SortingAlgorithms';
 
 import 'typeface-roboto';
+import {uid} from "react-uid";
 
 export default function MainScreen() {
     const [layout, setLayout] = useState("horizontal");
@@ -27,6 +28,7 @@ export default function MainScreen() {
     // State to start the sort process
     const [process, setProcess] = useState(false);
     const [items, setItems] = useState(generateRandomArray(numItems));
+    const [customNumbers,setCustomNumbers] = useState([]);
 
 
         const maxItems = layout === 'horizontal' ? 10 : 30;
@@ -39,6 +41,24 @@ export default function MainScreen() {
                 setSpeed(newSpeed);
             }
         }
+
+
+
+        function customInput(e){
+            let input = e.target.value.split(' ').filter(number => parseInt(number));
+            setCustomNumbers(input);
+            }
+
+
+            function submit(){
+            setItems([]);
+                let customItems = [];
+                for(let i=0;i<customNumbers.length;i++){
+                    const value = customNumbers[i];
+                    customItems.push({ id: uid(Math.random()), itemValue: value, color: generateRandomColor()})
+                }
+                setItems(customItems)
+            }
 
 
         function toggleLayout() {
@@ -89,7 +109,7 @@ export default function MainScreen() {
                                 Visualizer</Typography>
                         </Grid>
 
-                        <Grid item xs={12}>
+                        {inputType ==="DefaultInput" && <Grid item xs={12}>
                             <Slider
                                 value={typeof numItems === 'number' ? numItems : 0}
                                 onChange={(e, newValue) => reset(newValue)}
@@ -97,27 +117,37 @@ export default function MainScreen() {
                                 valueLabelDisplay="auto"
                                 max={maxItems}
                             />
-                        </Grid>
+                        </Grid>}
 
-                        <Grid item xs={12}>
+                        {inputType ==="DefaultInput" && <Grid item xs={12}>
                             <Typography component="h4" variant="h4">Number of items: {numItems}</Typography>
-                        </Grid>
+                        </Grid>}
 
                         <Grid item xs={12}>
                             <FormControl component="fieldset">
                                 <RadioGroup row aria-label="input-type" name="input-type" value={inputType}
                                             onChange={(e)=>setInputType(e.target.value)}>
-                                    <FormControlLabel value="UserGivenInput" control={<Radio/>} label="Custom Inputs"/>
+                                    <FormControlLabel value="CustomInputs" control={<Radio/>} label="Custom Inputs"/>
                                     <FormControlLabel value="DefaultInput" control={<Radio/>}
                                                       label="Default Input"/>
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
-                        {inputType === "DefaultInput" && <Grid item xs={12}>
+                        {inputType === "CustomInputs" && <Grid item xs={12}>
+                            <TextField id="custom_input"
+                                       onChange={customInput}
+                                       type="text"
+                                       placeholder="Insert space separated numbers. Eg: 23 7 12 90"
+                                       style={{width:"100%"}}
+                                       />
+                            <Button disabled={process} variant="contained" color="primary"
+                                    onClick={() => submit()}>
+                                Done!
+                            </Button>
+                        </Grid>
 
-                            { [...Array(numItems)].map(() => (<TextField id="time" type="number" style={{paddingRight:"0.5em",width:"5em"}} />))}
 
-                        </Grid>}
+                        }
                         <Grid item xs={12}>
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">Sorting Algorithm</FormLabel>
