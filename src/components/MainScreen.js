@@ -127,13 +127,13 @@ export default function MainScreen() {
                             <FormControl component="fieldset">
                                 <RadioGroup row aria-label="input-type" name="input-type" value={inputType}
                                             onChange={(e)=>setInputType(e.target.value)}>
-                                    <FormControlLabel value="CustomInputs" control={<Radio/>} label="Custom Inputs"/>
+                                    <FormControlLabel value="CustomInput" control={<Radio/>} label="Custom Input"/>
                                     <FormControlLabel value="DefaultInput" control={<Radio/>}
                                                       label="Default Input"/>
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
-                        {inputType === "CustomInputs" && <Grid item xs={12}>
+                        {inputType === "CustomInput" && <Grid item xs={12}>
                             <TextField id="custom_input"
                                        onChange={customInput}
                                        type="text"
