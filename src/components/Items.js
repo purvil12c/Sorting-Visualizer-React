@@ -30,12 +30,12 @@ export default function Items({items, layout}){
     return(
         <div style={{display: layout==='horizontal'?'grid':'inline-flex', justifyItems: 'center'}}>
             {
-                items.map(item => 
-                    <motion.div 
+                items.map(item =>
+                    <motion.div
                         key={item.id}
                         layoutTransition={springAnim}
-                        style={{...liStyle, 
-                        background: item.color, 
+                        style={{...liStyle,
+                        background: item.color,
                         width: layout==='horizontal'?(item.itemValue+10)*liWidth:liWidth,
                         height: layout==='horizontal'?liHeight:liHeight*(item.itemValue+10)
                         }}>
