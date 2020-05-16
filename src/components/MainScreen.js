@@ -51,7 +51,7 @@ export default function MainScreen() {
       let customItems = [];
       for(let i=0;i<customNumbers.length;i++){
           const value = customNumbers[i];
-          customItems.push({ id: uid(Math.random()), itemValue: Number(value), color: generateRandomColor()})
+          customItems.push({ id: uid(Math.random()), itemValue: Number(value), color: generateRandomColor(), IsBeingSwapped : false})
       }
       setItems(customItems)
     }
@@ -86,10 +86,33 @@ export default function MainScreen() {
         setItems(randomItems);
     }
 
+    function checkSwappedElements(itemsPrev, itemsCurrent)
+    {
+        let newItems = []
+        for (let i = 0; i < items.length; i++)
+        {
+            newItems[i] = itemsCurrent[i];
+            if(itemsCurrent[i].itemValue != itemsPrev[i].itemValue)
+            {
+                newItems[i].IsBeingSwapped = true;
+            }
+        }
+        return newItems;
+    }
+
     function runAlgorithm() {
         const result = getAlgoFunction(algoFunction)(items);
         for (let i = 0; i < result.length; i++) {
-            setTimeout(() => setItems(result[i]), i * speed);
+
+            if( i!= result.length-1)
+            {
+                let resultItemsWithSwapState = i==0?checkSwappedElements(items,result[i]):checkSwappedElements(result[i-1],result[i]);
+                setTimeout(() => setItems(resultItemsWithSwapState), i * speed);
+            }
+            else
+            {
+                setTimeout(() => setItems(result[i]), i * speed);
+            }   
         }
     }
 
