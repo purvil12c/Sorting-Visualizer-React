@@ -75,6 +75,8 @@ export function quickSort(items){
      }
      
      quickSortHelper(resultItems, 0, resultItems.length - 1);
+     
+     results.push(results[results.length-1]);
      return results;
 }
 
@@ -96,6 +98,7 @@ export function bubbleSort(items){
             }
         }
     }
+    results.push(JSON.parse(JSON.stringify(resultItems)));
     return results;
 }
 
@@ -111,6 +114,7 @@ export function insertionSort(items){
             results.push(JSON.parse(JSON.stringify(resultItems)));
         }
     }
+    results.push(JSON.parse(JSON.stringify(resultItems)));
     return results;
 }
 
@@ -135,6 +139,8 @@ export function selectionSort(items){
         current_index+=1
         results.push(JSON.parse(JSON.stringify(resultItems)));
     }
+    
+    results.push(JSON.parse(JSON.stringify(resultItems)));
     return results;
 }
 

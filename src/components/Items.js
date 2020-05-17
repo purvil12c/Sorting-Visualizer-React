@@ -35,7 +35,7 @@ export default function Items({items, layout}){
                         key={item.id}
                         layoutTransition={springAnim}
                         style={{...liStyle,
-                        background: item.color,
+                        background: item.IsBeingSwapped === true?"black":item.color,
                         width: layout==='horizontal'?(item.itemValue+10)*liWidth:liWidth,
                         height: layout==='horizontal'?liHeight:liHeight*(item.itemValue+10)
                         }}>
