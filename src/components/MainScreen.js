@@ -71,7 +71,8 @@ export default function MainScreen() {
 
     function reset(num) {
         setProcess(false);
-        setAlgoFunction("BubbleSort");
+        // Changing the AlgoFunction when number of item is changed is unneccessary
+        // setAlgoFunction("BubbleSort");
         setIsSorted(false);
         setNewItems(num);
     }
@@ -82,6 +83,7 @@ export default function MainScreen() {
     function resetNumbers() {
         setProcess(false)
         setIsSorted(false)
+        setAlgoFunction(algoFunction)
         let randomItems = generateRandomArray(numItems)
         setItems(randomItems)
     }
