@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import { Slider } from '@material-ui/core';
+import { Slider, Snackbar } from '@material-ui/core';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -12,11 +12,11 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Items from './Items';
-import {generateRandomArray, generateRandomColor} from '../utils/Utils';
+import { generateRandomArray, generateRandomColor } from '../utils/Utils';
 import { getAlgoFunction } from '../utils/SortingAlgorithms';
 
 import 'typeface-roboto';
-import {uid} from "react-uid";
+import { uid } from "react-uid";
 
 export default function MainScreen() {
     const [layout, setLayout] = useState("horizontal");
@@ -41,19 +41,19 @@ export default function MainScreen() {
         }
     }
 
-    function customInput(e){
+    function customInput(e) {
         let input = e.target.value.split(' ').filter(number => parseInt(number));
         setCustomNumbers(input);
     }
 
-    function submit(){
-      setItems([]);
-      let customItems = [];
-      for(let i=0;i<customNumbers.length;i++){
-          const value = customNumbers[i];
-          customItems.push({ id: uid(Math.random()), itemValue: Number(value), color: generateRandomColor(), IsBeingSwapped : false})
-      }
-      setItems(customItems)
+    function submit() {
+        setItems([]);
+        let customItems = [];
+        for (let i = 0; i < customNumbers.length; i++) {
+            const value = customNumbers[i];
+            customItems.push({ id: uid(Math.random()), itemValue: Number(value), color: generateRandomColor(), IsBeingSwapped: false })
+        }
+        setItems(customItems)
     }
     function toggleLayout() {
         if (layout === "vertical")
@@ -71,9 +71,21 @@ export default function MainScreen() {
 
     function reset(num) {
         setProcess(false);
-        setAlgoFunction("BubbleSort");
+        // Changing the AlgoFunction when number of item is changed is unneccessary
+        // setAlgoFunction("BubbleSort");
         setIsSorted(false);
         setNewItems(num);
+    }
+
+    /**
+     * Reset to same number of random items
+     */
+    function resetNumbers() {
+        setProcess(false)
+        setIsSorted(false)
+        setAlgoFunction(algoFunction)
+        let randomItems = generateRandomArray(numItems)
+        setItems(randomItems)
     }
 
     function setNewItems(num) {
@@ -86,14 +98,11 @@ export default function MainScreen() {
         setItems(randomItems);
     }
 
-    function checkSwappedElements(itemsPrev, itemsCurrent)
-    {
+    function checkSwappedElements(itemsPrev, itemsCurrent) {
         let newItems = []
-        for (let i = 0; i < items.length; i++)
-        {
+        for (let i = 0; i < items.length; i++) {
             newItems[i] = itemsCurrent[i];
-            if(itemsCurrent[i].itemValue != itemsPrev[i].itemValue)
-            {
+            if (itemsCurrent[i].itemValue != itemsPrev[i].itemValue) {
                 newItems[i].IsBeingSwapped = true;
             }
         }
@@ -104,29 +113,42 @@ export default function MainScreen() {
         const result = getAlgoFunction(algoFunction)(items);
         for (let i = 0; i < result.length; i++) {
 
-            if( i!= result.length-1)
-            {
-                let resultItemsWithSwapState = i==0?checkSwappedElements(items,result[i]):checkSwappedElements(result[i-1],result[i]);
-                setTimeout(() => setItems(resultItemsWithSwapState), i * speed);
+            if (i != result.length - 1) {
+                let resultItemsWithSwapState = i == 0 ? checkSwappedElements(items, result[i]) : checkSwappedElements(result[i - 1], result[i]);
+                setTimeout(() => {
+                    setItems(resultItemsWithSwapState)
+                }, i * speed);
             }
-            else
-            {
-                setTimeout(() => setItems(result[i]), i * speed);
-            }   
+            else {
+                setTimeout(() => {
+                    setItems(result[i])
+                }, i * speed);
+            }
+
+            setTimeout(() => {
+                setIsSorted(true)
+            }, result.length * speed);
         }
     }
 
+    function handleClose(reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+        // setOpen(false);
+    };
+
     return (
         <React.Fragment>
-            <CssBaseline/>
-            <Container maxWidth="lg" style={{height: '100vh'}}>
+            <CssBaseline />
+            <Container maxWidth="lg" style={{ height: '100vh' }}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <Typography color="textSecondary" component="h1" variant="h1">Sorting
                             Visualizer</Typography>
                     </Grid>
 
-                    {inputType ==="DefaultInput" && <Grid item xs={12}>
+                    {inputType === "DefaultInput" && <Grid item xs={12}>
                         <Slider
                             value={typeof numItems === 'number' ? numItems : 0}
                             onChange={(e, newValue) => reset(newValue)}
@@ -136,29 +158,29 @@ export default function MainScreen() {
                         />
                     </Grid>}
 
-                    {inputType ==="DefaultInput" && <Grid item xs={12}>
+                    {inputType === "DefaultInput" && <Grid item xs={12}>
                         <Typography component="h4" variant="h4">Number of items: {numItems}</Typography>
                     </Grid>}
 
                     <Grid item xs={12}>
                         <FormControl component="fieldset">
                             <RadioGroup row aria-label="input-type" name="input-type" value={inputType}
-                                        onChange={(e)=>setInputType(e.target.value)}>
-                                <FormControlLabel value="CustomInput" control={<Radio/>} label="Custom Input"/>
-                                <FormControlLabel value="DefaultInput" control={<Radio/>}
-                                                  label="Default Input"/>
+                                onChange={(e) => setInputType(e.target.value)}>
+                                <FormControlLabel value="CustomInput" control={<Radio />} label="Custom Input" />
+                                <FormControlLabel value="DefaultInput" control={<Radio />}
+                                    label="Default Input" />
                             </RadioGroup>
                         </FormControl>
                     </Grid>
                     {inputType === "CustomInput" && <Grid item xs={12}>
                         <TextField id="custom_input"
-                                   onChange={customInput}
-                                   type="text"
-                                   placeholder="Insert space separated numbers. Eg: 23 7 12 90"
-                                   style={{width:"100%"}}
-                                   />
+                            onChange={customInput}
+                            type="text"
+                            placeholder="Insert space separated numbers. Eg: 23 7 12 90"
+                            style={{ width: "100%" }}
+                        />
                         <Button disabled={process} variant="contained" color="primary"
-                                onClick={() => submit()}>
+                            onClick={() => submit()}>
                             Done!
                         </Button>
                     </Grid>
@@ -169,19 +191,19 @@ export default function MainScreen() {
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Sorting Algorithm</FormLabel>
                             <RadioGroup row aria-label="algorithm" name="algorithm" value={algoFunction}
-                                        onChange={(e) => setAlgoFunction(e.target.value)}>
-                                <FormControlLabel value="BubbleSort" control={<Radio/>} label="BubbleSort"/>
-                                <FormControlLabel value="InsertionSort" control={<Radio/>} label="InsertionSort"/>
-                                <FormControlLabel value="SelectionSort" control={<Radio/>} label="SelectionSort"/>
-                                <FormControlLabel value="MergeSort" control={<Radio/>} label="MergeSort"/>
-                                <FormControlLabel value="QuickSort" control={<Radio/>} label="QuickSort"/>
+                                onChange={(e) => setAlgoFunction(e.target.value)}>
+                                <FormControlLabel value="BubbleSort" control={<Radio />} label="BubbleSort" />
+                                <FormControlLabel value="InsertionSort" control={<Radio />} label="InsertionSort" />
+                                <FormControlLabel value="SelectionSort" control={<Radio />} label="SelectionSort" />
+                                <FormControlLabel value="MergeSort" control={<Radio />} label="MergeSort" />
+                                <FormControlLabel value="QuickSort" control={<Radio />} label="QuickSort" />
                             </RadioGroup>
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Button disabled={process} variant="contained" color="primary"
-                                onClick={() => runAlgorithm()}>
+                            onClick={() => runAlgorithm()}>
                             Launch Sort! 🚀
                         </Button>
 
@@ -196,8 +218,8 @@ export default function MainScreen() {
                             onChange={changeSpeed}
                         />
 
-                        <Button style={{float: 'right'}} disabled={process} variant="contained" color="secondary"
-                                onClick={() => toggleLayout()}>
+                        <Button style={{ float: 'right' }} disabled={process} variant="contained" color="secondary"
+                            onClick={() => toggleLayout()}>
                             Toggle Layout: {layout.toUpperCase()}
                         </Button>
                     </Grid>
@@ -209,6 +231,23 @@ export default function MainScreen() {
                         />
                     </Grid>
                 </Grid>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={isSorted}
+                    autoHideDuration={3000}
+                    onClose={handleClose}
+                    message="Sorting completed!"
+                    action={
+                        <React.Fragment>
+                            <Button color="secondary" size="small" onClick={resetNumbers}>
+                                RESET
+                            </Button>
+                        </React.Fragment>
+                    }
+                />
             </Container>
         </React.Fragment>
     );
