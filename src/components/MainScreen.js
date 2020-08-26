@@ -18,7 +18,7 @@ import { getAlgoFunction } from '../utils/SortingAlgorithms';
 import 'typeface-roboto';
 import { uid } from "react-uid";
 
-export default function MainScreen() {
+const MainScreen = () => {
     const [layout, setLayout] = useState("horizontal");
     const [speed, setSpeed] = useState(1000);
     const [numItems, setNumItems] = useState(2);
@@ -32,7 +32,7 @@ export default function MainScreen() {
 
     const maxItems = layout === 'horizontal' ? 10 : 30;
 
-    function changeSpeed(e) {
+    const changeSpeed = (e) => {
         const newSpeed = e.target.value;
         if (newSpeed < 0 || newSpeed > 1000) {
             alert('Speed should be between 0 and 1000 ms');
@@ -41,12 +41,12 @@ export default function MainScreen() {
         }
     }
 
-    function customInput(e) {
+    const customInput = (e) => {
         let input = e.target.value.split(' ').filter(number => parseInt(number));
         setCustomNumbers(input);
     }
 
-    function submit() {
+    const submit = () => {
         setItems([]);
         let customItems = [];
         for (let i = 0; i < customNumbers.length; i++) {
@@ -55,21 +55,21 @@ export default function MainScreen() {
         }
         setItems(customItems)
     }
-    function toggleLayout() {
+    const toggleLayout = () => {
         if (layout === "vertical")
             setLayout("horizontal");
         else
             setLayout("vertical");
     }
 
-    function reset() {
-        setProcess(false);
-        setAlgoFunction("BubbleSort");
-        setIsSorted(false);
-        setNumItems(2);
-    }
+    // const reset = () => {
+    //     setProcess(false);
+    //     setAlgoFunction("BubbleSort");
+    //     setIsSorted(false);
+    //     setNumItems(2);
+    // }
 
-    function reset(num) {
+    const resetWithNum = (num) => {
         setProcess(false);
         // Changing the AlgoFunction when number of item is changed is unneccessary
         // setAlgoFunction("BubbleSort");
@@ -80,7 +80,7 @@ export default function MainScreen() {
     /**
      * Reset to same number of random items
      */
-    function resetNumbers() {
+    const resetNumbers = () => {
         setProcess(false)
         setIsSorted(false)
         setAlgoFunction(algoFunction)
@@ -88,7 +88,7 @@ export default function MainScreen() {
         setItems(randomItems)
     }
 
-    function setNewItems(num) {
+    const setNewItems = (num) => {
         if (num === numItems) {
             return
         }
@@ -98,23 +98,23 @@ export default function MainScreen() {
         setItems(randomItems);
     }
 
-    function checkSwappedElements(itemsPrev, itemsCurrent) {
+    const checkSwappedElements = (itemsPrev, itemsCurrent) => {
         let newItems = []
         for (let i = 0; i < items.length; i++) {
             newItems[i] = itemsCurrent[i];
-            if (itemsCurrent[i].itemValue != itemsPrev[i].itemValue) {
+            if (itemsCurrent[i].itemValue !== itemsPrev[i].itemValue) {
                 newItems[i].IsBeingSwapped = true;
             }
         }
         return newItems;
     }
 
-    function runAlgorithm() {
+    const runAlgorithm = () => {
         const result = getAlgoFunction(algoFunction)(items);
         for (let i = 0; i < result.length; i++) {
 
-            if (i != result.length - 1) {
-                let resultItemsWithSwapState = i == 0 ? checkSwappedElements(items, result[i]) : checkSwappedElements(result[i - 1], result[i]);
+            if (i !== result.length - 1) {
+                let resultItemsWithSwapState = i === 0 ? checkSwappedElements(items, result[i]) : checkSwappedElements(result[i - 1], result[i]);
                 setTimeout(() => {
                     setItems(resultItemsWithSwapState)
                 }, i * speed);
@@ -131,7 +131,7 @@ export default function MainScreen() {
         }
     }
 
-    function handleClose(reason) {
+    const handleClose = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -151,7 +151,7 @@ export default function MainScreen() {
                     {inputType === "DefaultInput" && <Grid item xs={12}>
                         <Slider
                             value={typeof numItems === 'number' ? numItems : 0}
-                            onChange={(e, newValue) => reset(newValue)}
+                            onChange={(e, newValue) => resetWithNum(newValue)}
                             aria-labelledby="input-slider"
                             valueLabelDisplay="auto"
                             max={maxItems}
@@ -252,3 +252,5 @@ export default function MainScreen() {
         </React.Fragment>
     );
 }
+
+export default MainScreen
