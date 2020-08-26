@@ -1,0 +1,26 @@
+name: ESLint
+
+on: 
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Install Linter
+        uses: samuelmeuli/lint-action@v1.5.3
+        with:
+          github_token: ${{ secrets.github_token }}
+      - name: Run Checker  
+        run: |
+          npm install eslint --save-dev
+          npm install eslint-plugin-react@latest --save-dev
+          npx eslint src/
+
